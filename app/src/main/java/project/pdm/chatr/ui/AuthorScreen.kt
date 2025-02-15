@@ -17,9 +17,11 @@ import androidx.navigation.NavHostController
 import project.pdm.chatr.ui.theme.Amber40
 import project.pdm.chatr.ui.theme.BlueGrey80
 
+private const val APP_TAG = "CHaTrApp"
+
 @Composable
 fun AuthorScreen(navController: NavHostController) {
-    Log.d("AuthorScreen", "Displaying Author Screen")
+    Log.d(APP_TAG, "AuthorScreen: Displaying Author Screen")
 
     val context = LocalContext.current
     val email = "A47076@alunos.isel.pt"
@@ -40,14 +42,17 @@ fun AuthorScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-                Log.d("AuthorScreen", "Opening email to send feedback")
+                Log.d(APP_TAG, "AuthorScreen: Opening email to send feedback")
                 val intent = Intent(Intent.ACTION_SENDTO).apply {
                     data = Uri.parse("mailto:$email")
                     putExtra(Intent.EXTRA_SUBJECT, "Feedback on CHaTr App")
                 }
                 context.startActivity(intent)
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Amber40, contentColor = Color.Black),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Amber40,
+                contentColor = Color.Black
+            ),
             modifier = Modifier
                 .fillMaxWidth(0.7f)
                 .height(50.dp)
@@ -59,10 +64,13 @@ fun AuthorScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-                Log.d("AuthorScreen", "Navigating back")
+                Log.d(APP_TAG, "AuthorScreen: Navigating back")
                 navController.popBackStack()
             },
-            colors = ButtonDefaults.buttonColors(containerColor = BlueGrey80, contentColor = Color.Black),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = BlueGrey80,
+                contentColor = Color.Black
+            ),
             modifier = Modifier
                 .fillMaxWidth(0.7f)
                 .height(50.dp)

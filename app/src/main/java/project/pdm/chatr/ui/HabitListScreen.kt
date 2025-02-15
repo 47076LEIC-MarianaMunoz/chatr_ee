@@ -1,6 +1,7 @@
 package project.pdm.chatr.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,9 +33,12 @@ import project.pdm.chatr.ui.theme.Blue80
 import project.pdm.chatr.ui.theme.BlueGrey40
 import project.pdm.chatr.ui.theme.BlueProgress
 
+private const val APP_TAG = "CHaTrApp"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController) {
+    Log.d(APP_TAG, "HabitListScreen: Displaying Habit List Screen")
     val habits by viewModel.habits.collectAsState()
 
     Box(
@@ -45,9 +49,14 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
         Column {
             // Top AppBar with Back Button
             TopAppBar(
-                title = { Text("Habits", color = Color.Black, fontWeight = FontWeight.SemiBold) },
+                title = {
+                    Text("Habits", color = Color.Black, fontWeight = FontWeight.SemiBold)
+                },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("entry") }) {
+                    IconButton(onClick = {
+                        Log.d(APP_TAG, "HabitListScreen: Navigating back to Entry Screen")
+                        navController.navigate("entry")
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back to Entry",
@@ -71,9 +80,18 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
                     items(habits) { habit ->
                         HabitItem(
                             habit = habit,
-                            onIncrement = { viewModel.updateHabitCompletion(habit, habit.completedToday + 1) },
-                            onDecrement = { viewModel.updateHabitCompletion(habit, (habit.completedToday - 1).coerceAtLeast(0)) },
-                            onDelete = { viewModel.deleteHabit(habit) }
+                            onIncrement = {
+                                Log.d(APP_TAG, "HabitListScreen: Incrementing habit '${habit.name}'")
+                                viewModel.updateHabitCompletion(habit, habit.completedToday + 1)
+                            },
+                            onDecrement = {
+                                Log.d(APP_TAG, "HabitListScreen: Decrementing habit '${habit.name}'")
+                                viewModel.updateHabitCompletion(habit, (habit.completedToday - 1).coerceAtLeast(0))
+                            },
+                            onDelete = {
+                                Log.d(APP_TAG, "HabitListScreen: Deleting habit '${habit.name}'")
+                                viewModel.deleteHabit(habit)
+                            }
                         )
                     }
                 }
@@ -87,7 +105,10 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
                         .padding(16.dp)
                 ) {
                     FloatingActionButton(
-                        onClick = { navController.navigate("habitStats") },
+                        onClick = {
+                            Log.d(APP_TAG, "HabitListScreen: Navigating to Habit Stats Screen")
+                            navController.navigate("habitStats")
+                        },
                         containerColor = Blue40,
                         contentColor = Color.White
                     ) {
@@ -98,7 +119,10 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
                     }
 
                     FloatingActionButton(
-                        onClick = { navController.navigate("habitForm") },
+                        onClick = {
+                            Log.d(APP_TAG, "HabitListScreen: Navigating to Habit Form Screen")
+                            navController.navigate("habitForm")
+                        },
                         containerColor = Amber40,
                         contentColor = Color.Black
                     ) {
@@ -125,7 +149,7 @@ fun HabitItem(
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = Amber80) // Balões agora em amarelo!
+        colors = CardDefaults.cardColors(containerColor = Amber80)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -159,14 +183,20 @@ fun HabitItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row {
-                    IconButton(onClick = onDecrement) {
+                    IconButton(onClick = {
+                        Log.d(APP_TAG, "HabitItem: Decrease button clicked for habit '${habit.name}'")
+                        onDecrement()
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.Remove,
                             contentDescription = "Decrease Progress",
                             tint = Color.Black
                         )
                     }
-                    IconButton(onClick = onIncrement) {
+                    IconButton(onClick = {
+                        Log.d(APP_TAG, "HabitItem: Increase button clicked for habit '${habit.name}'")
+                        onIncrement()
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.Add,
                             contentDescription = "Increase Progress",
@@ -174,7 +204,10 @@ fun HabitItem(
                         )
                     }
                 }
-                IconButton(onClick = onDelete) {
+                IconButton(onClick = {
+                    Log.d(APP_TAG, "HabitItem: Delete button clicked for habit '${habit.name}'")
+                    onDelete()
+                }) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
                         contentDescription = "Remove Habit",

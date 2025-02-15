@@ -1,6 +1,7 @@
 package project.pdm.chatr.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,7 +10,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,9 +28,12 @@ import project.pdm.chatr.ui.theme.Blue79
 import project.pdm.chatr.ui.theme.Blue80
 import project.pdm.chatr.viewmodel.HabitViewModel
 
+private const val APP_TAG = "CHaTrApp"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitStatsScreen(viewModel: HabitViewModel, navController: NavHostController) {
+    Log.d(APP_TAG, "HabitStatsScreen: Displaying Habit Stats Screen")
     val habits by viewModel.habits.collectAsState()
 
     Column(
@@ -37,9 +43,18 @@ fun HabitStatsScreen(viewModel: HabitViewModel, navController: NavHostController
     ) {
         // Top AppBar
         TopAppBar(
-            title = { Text("Habit Progress", color = Color.Black, fontWeight = FontWeight.SemiBold) },
+            title = {
+                Text(
+                    "Habit Progress",
+                    color = Color.Black,
+                    fontWeight = FontWeight.SemiBold
+                )
+            },
             navigationIcon = {
-                IconButton(onClick = { navController.navigate("habitList") }) {
+                IconButton(onClick = {
+                    Log.d(APP_TAG, "HabitStatsScreen: Navigating back to Habit List")
+                    navController.navigate("habitList")
+                }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
@@ -67,6 +82,7 @@ fun HabitStatsScreen(viewModel: HabitViewModel, navController: NavHostController
 
 @Composable
 fun HabitStatsCard(habit: Habit) {
+    Log.d(APP_TAG, "HabitStatsCard: Displaying stats for habit '${habit.name}'")
     val progressFraction = if (habit.targetPerDay > 0) {
         habit.completedToday.toFloat() / habit.targetPerDay.toFloat()
     } else 0f
@@ -90,7 +106,7 @@ fun HabitStatsCard(habit: Habit) {
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Gráfico Circular
+            // Circular chart
             CircularProgressIndicator(
                 progress = progressFraction,
                 modifier = Modifier
@@ -119,11 +135,6 @@ fun HabitStatsCard(habit: Habit) {
 @Composable
 fun HabitStatsScreenPreview() {
     val application = Application()
-    val viewModel = remember { HabitViewModel(application) }
-
-    viewModel.addHabit(Habit(id = 1, name = "Beber água", description = "", targetPerDay = 4, completedToday = 2))
-    viewModel.addHabit(Habit(id = 2, name = "Ler", description = "", targetPerDay = 2, completedToday = 1))
-    viewModel.addHabit(Habit(id = 3, name = "Exercício", description = "", targetPerDay = 1, completedToday = 1))
-
+    val viewModel = HabitViewModel(application)
     HabitStatsScreen(viewModel = viewModel, navController = rememberNavController())
 }

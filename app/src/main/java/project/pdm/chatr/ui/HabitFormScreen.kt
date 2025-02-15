@@ -1,6 +1,7 @@
 package project.pdm.chatr.ui
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,8 @@ import project.pdm.chatr.ui.theme.Amber80
 import project.pdm.chatr.ui.theme.Blue80
 import project.pdm.chatr.viewmodel.HabitViewModel
 
+private const val APP_TAG = "CHaTrApp"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitFormScreen(
@@ -29,6 +32,8 @@ fun HabitFormScreen(
     onHabitAdded: () -> Unit,
     onBack: () -> Unit
 ) {
+    Log.d(APP_TAG, "HabitFormScreen: Displaying Habit Form Screen")
+
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var targetPerDay by remember { mutableStateOf("1") }
@@ -40,8 +45,19 @@ fun HabitFormScreen(
     ) {
         // Top AppBar with back button
         TopAppBar(
-            title = { Text("Add Habit", color = Color.Black, fontSize = 20.sp, fontWeight = FontWeight.SemiBold) },            navigationIcon = {
-                IconButton(onClick = onBack) {
+            title = {
+                Text(
+                    "Add Habit",
+                    color = Color.Black,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    Log.d(APP_TAG, "HabitFormScreen: Back button clicked")
+                    onBack()
+                }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
@@ -104,6 +120,7 @@ fun HabitFormScreen(
 
                     Button(
                         onClick = {
+                            Log.d(APP_TAG, "HabitFormScreen: Add Habit button clicked")
                             val timesPerDayInt = targetPerDay.toIntOrNull()
                             if (name.isNotBlank() && timesPerDayInt != null) {
                                 viewModel.addHabit(
@@ -114,7 +131,10 @@ fun HabitFormScreen(
                                         targetPerDay = timesPerDayInt
                                     )
                                 )
+                                Log.d(APP_TAG, "HabitFormScreen: Habit added successfully")
                                 onHabitAdded()
+                            } else {
+                                Log.d(APP_TAG, "HabitFormScreen: Invalid input, habit not added")
                             }
                         },
                         modifier = Modifier

@@ -1,8 +1,10 @@
-# chatr_ee
-![Chatr Logo](./logo_chatr.png)
+# CHaTr - Chelas Habit Tracker
 
-Chelas Habit Tracker - Mobile Devices Programming
+**Mobile Devices Programming**
 
-Author: 47076 - Mariana Muñoz
+**Author:** 47076 - Mariana Muñoz
 
-Link for the video of demonstration:
+## Demonstration
+
+A short video demonstration of the app in action is available here:  
+[CHaTr Demo](https://youtube.com/shorts/qI9XEqjzJLY?feature=share)

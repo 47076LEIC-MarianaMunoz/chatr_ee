@@ -23,10 +23,11 @@ import project.pdm.chatr.ui.theme.Amber40
 import project.pdm.chatr.ui.theme.Blue40
 import project.pdm.chatr.ui.theme.BlueGrey40
 
+private const val APP_TAG = "CHaTrApp"
+
 @Composable
 fun EntryScreen(navController: NavHostController) {
-    Log.d("EntryScreen", "Displaying Entry Screen")
-
+    Log.d(APP_TAG, "EntryScreen: Displaying Entry Screen")
     val activity = LocalContext.current as? Activity
 
     Box(
@@ -38,7 +39,7 @@ fun EntryScreen(navController: NavHostController) {
                 )
             )
     ) {
-        // Info Button on the Top Right
+        // Information button at the top right corner
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -47,7 +48,7 @@ fun EntryScreen(navController: NavHostController) {
         ) {
             IconButton(
                 onClick = {
-                    Log.d("EntryScreen", "Navigating to Author Screen")
+                    Log.d(APP_TAG, "EntryScreen: Navigating to Author Screen")
                     navController.navigate("author")
                 },
             ) {
@@ -85,13 +86,16 @@ fun EntryScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // Start Button
+            // Get Started button
             Button(
                 onClick = {
-                    Log.d("EntryScreen", "Navigating to Habit List Screen")
+                    Log.d(APP_TAG, "EntryScreen: Navigating to Habit List Screen")
                     navController.navigate("habitList")
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Amber40, contentColor = Color.Black),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Amber40,
+                    contentColor = Color.Black
+                ),
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .height(55.dp),
@@ -102,13 +106,16 @@ fun EntryScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            // Quit Button
+            // Quit button
             Button(
                 onClick = {
-                    Log.d("EntryScreen", "Exiting App")
+                    Log.d(APP_TAG, "EntryScreen: Exiting App")
                     activity?.finish()
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                ),
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .height(55.dp),

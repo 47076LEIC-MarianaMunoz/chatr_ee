@@ -59,17 +59,19 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.androidx.foundation.android)
     implementation(libs.core.ktx)
+    implementation(libs.androidx.junit.ktx)
 
     // UI Testing for Compose
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.test.manifest)
 
-// JUnit for testing
+    // JUnit for testing
     testImplementation(libs.junit)
+    testImplementation(libs.mockito.core.v400)
+    testImplementation (libs.robolectric)
     androidTestImplementation(libs.androidx.junit.v115)
     androidTestImplementation(libs.androidx.espresso.core.v351)
     androidTestImplementation(libs.androidx.navigation.testing)
-
 
     // Debugging tools
     debugImplementation(libs.ui.tooling)
