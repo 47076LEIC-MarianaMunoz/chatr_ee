@@ -1,5 +1,5 @@
 # chatr_ee
-![Chatr Logo](logo_chatr.png)
+![Chatr Logo](./logo_chatr.png)
 
 Chelas Habit Tracker - Mobile Devices Programming
 
