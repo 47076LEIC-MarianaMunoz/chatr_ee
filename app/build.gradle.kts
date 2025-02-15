@@ -41,6 +41,12 @@ android {
     buildFeatures {
         compose = true
     }
+
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
@@ -68,7 +74,8 @@ dependencies {
     // JUnit for testing
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core.v400)
-    testImplementation (libs.robolectric)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.jetbrains.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit.v115)
     androidTestImplementation(libs.androidx.espresso.core.v351)
     androidTestImplementation(libs.androidx.navigation.testing)

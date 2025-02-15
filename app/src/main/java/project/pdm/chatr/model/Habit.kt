@@ -8,5 +8,6 @@ data class Habit(
     val name: String,
     val description: String,
     val targetPerDay: Int,
-    var completedToday: Int = 0
+    var completedToday: Int = 0,
+    val weeklyCompletions: List<Int> = listOf(0, 0, 0, 0, 0, 0, 0)
 )

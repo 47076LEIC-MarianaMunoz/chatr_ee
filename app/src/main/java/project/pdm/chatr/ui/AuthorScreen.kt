@@ -14,15 +14,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import project.pdm.chatr.APP_TAG
 import project.pdm.chatr.ui.theme.Amber40
 import project.pdm.chatr.ui.theme.BlueGrey80
 
-private const val APP_TAG = "CHaTrApp"
-
+/**
+ * Composable function for the Author Screen.
+ *
+ * @param navController Navigation controller for screen transitions.
+ */
 @Composable
 fun AuthorScreen(navController: NavHostController) {
     Log.d(APP_TAG, "AuthorScreen: Displaying Author Screen")
 
+    // Get current context
     val context = LocalContext.current
     val email = "A47076@alunos.isel.pt"
 
@@ -34,15 +39,18 @@ fun AuthorScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Display author information
         Text("Created by: Mariana (A47076)", fontSize = 22.sp, color = Color.Black)
         Spacer(modifier = Modifier.height(5.dp))
         Text("Contact: $email", fontSize = 16.sp, color = Color.Gray)
 
         Spacer(modifier = Modifier.height(30.dp))
 
+        // Button to send feedback via email
         Button(
             onClick = {
                 Log.d(APP_TAG, "AuthorScreen: Opening email to send feedback")
+                // Create an intent to send an email
                 val intent = Intent(Intent.ACTION_SENDTO).apply {
                     data = Uri.parse("mailto:$email")
                     putExtra(Intent.EXTRA_SUBJECT, "Feedback on CHaTr App")
@@ -62,6 +70,7 @@ fun AuthorScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(15.dp))
 
+        // Button to navigate back
         Button(
             onClick = {
                 Log.d(APP_TAG, "AuthorScreen: Navigating back")

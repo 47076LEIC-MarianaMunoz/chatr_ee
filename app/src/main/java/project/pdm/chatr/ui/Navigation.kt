@@ -6,10 +6,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import project.pdm.chatr.APP_TAG
 import project.pdm.chatr.viewmodel.HabitViewModel
 
-private const val APP_TAG = "CHaTrApp"
-
+/**
+ * Sets up the navigation graph for the app.
+ *
+ * @param navController The NavHostController used for navigation.
+ * @param viewModel The HabitViewModel used by screens.
+ */
 @Composable
 fun HabitNavigation(navController: NavHostController, viewModel: HabitViewModel) {
     Log.d(APP_TAG, "HabitNavigation: Initializing Navigation")

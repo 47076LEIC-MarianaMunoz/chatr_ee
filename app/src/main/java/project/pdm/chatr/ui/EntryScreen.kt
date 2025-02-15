@@ -18,13 +18,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import project.pdm.chatr.APP_TAG
 import project.pdm.chatr.R
 import project.pdm.chatr.ui.theme.Amber40
 import project.pdm.chatr.ui.theme.Blue40
 import project.pdm.chatr.ui.theme.BlueGrey40
 
-private const val APP_TAG = "CHaTrApp"
 
+/**
+ * EntryScreen displays the welcome screen with a logo, title, and buttons
+ * to navigate to the habit list or exit the app.
+ *
+ * @param navController Navigation controller to navigate between screens.
+ */
 @Composable
 fun EntryScreen(navController: NavHostController) {
     Log.d(APP_TAG, "EntryScreen: Displaying Entry Screen")
@@ -34,12 +40,13 @@ fun EntryScreen(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .background(
+                // Vertical gradient background
                 Brush.verticalGradient(
                     colors = listOf(Blue40, BlueGrey40)
                 )
             )
     ) {
-        // Information button at the top right corner
+        // Top-right info button that navigates to the Author screen.
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -50,7 +57,7 @@ fun EntryScreen(navController: NavHostController) {
                 onClick = {
                     Log.d(APP_TAG, "EntryScreen: Navigating to Author Screen")
                     navController.navigate("author")
-                },
+                }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Info,
@@ -67,7 +74,7 @@ fun EntryScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Logo
+            // Logo image
             Image(
                 painter = painterResource(id = R.drawable.logo_chatr),
                 contentDescription = "CHaTr Logo",
@@ -76,7 +83,7 @@ fun EntryScreen(navController: NavHostController) {
                     .padding(bottom = 16.dp)
             )
 
-            // Title
+            // Welcome title
             Text(
                 text = "Welcome to CHaTr",
                 style = MaterialTheme.typography.headlineMedium,
@@ -86,7 +93,7 @@ fun EntryScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // Get Started button
+            // "Get Started" button navigates to HabitList screen.
             Button(
                 onClick = {
                     Log.d(APP_TAG, "EntryScreen: Navigating to Habit List Screen")
@@ -106,7 +113,7 @@ fun EntryScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            // Quit button
+            // "Quit" button finishes the current activity.
             Button(
                 onClick = {
                     Log.d(APP_TAG, "EntryScreen: Exiting App")

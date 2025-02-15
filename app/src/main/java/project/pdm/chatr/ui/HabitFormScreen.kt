@@ -18,13 +18,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import project.pdm.chatr.APP_TAG
 import project.pdm.chatr.model.Habit
 import project.pdm.chatr.ui.theme.Amber80
 import project.pdm.chatr.ui.theme.Blue80
 import project.pdm.chatr.viewmodel.HabitViewModel
 
-private const val APP_TAG = "CHaTrApp"
 
+/**
+ * HabitFormScreen displays a form to add a new habit with name, description, and target per day.
+ *
+ * @param viewModel ViewModel to add the new habit to the list.
+ * @param onHabitAdded Callback to navigate back to the habit list screen after adding a habit.
+ * @param onBack Callback to navigate back to the previous screen.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitFormScreen(
@@ -41,7 +48,7 @@ fun HabitFormScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White)
+            .background(Color.White)
     ) {
         // Top AppBar with back button
         TopAppBar(
@@ -70,17 +77,13 @@ fun HabitFormScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Form
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f),
-                colors = CardDefaults.cardColors(
-                    containerColor = Amber80
-                ),
+                modifier = Modifier.fillMaxWidth(0.9f),
+                colors = CardDefaults.cardColors(containerColor = Amber80),
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {

@@ -24,21 +24,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import project.pdm.chatr.APP_TAG
 import project.pdm.chatr.viewmodel.HabitViewModel
 import project.pdm.chatr.model.Habit
 import project.pdm.chatr.ui.theme.Amber40
 import project.pdm.chatr.ui.theme.Amber80
 import project.pdm.chatr.ui.theme.Blue40
-import project.pdm.chatr.ui.theme.Blue80
-import project.pdm.chatr.ui.theme.BlueGrey40
 import project.pdm.chatr.ui.theme.BlueProgress
 
-private const val APP_TAG = "CHaTrApp"
 
+/**
+ * Displays the Habit List Screen.
+ *
+ * This screen shows:
+ * - A TopAppBar with a back button.
+ * - A LazyColumn of habit items.
+ * - Two floating action buttons for navigating to the stats screen and the habit form.
+ *
+ * @param viewModel The HabitViewModel that supplies the list of habits and handles operations.
+ * @param navController Navigation controller for screen transitions.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController) {
     Log.d(APP_TAG, "HabitListScreen: Displaying Habit List Screen")
+    // Collect habits from the ViewModel as state.
     val habits by viewModel.habits.collectAsState()
 
     Box(
@@ -47,7 +57,7 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
             .background(color = Color.White)
     ) {
         Column {
-            // Top AppBar with Back Button
+            // Top AppBar with a back button to navigate back to the entry screen.
             TopAppBar(
                 title = {
                     Text("Habits", color = Color.Black, fontWeight = FontWeight.SemiBold)
@@ -69,8 +79,8 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // LazyColumn inside a Box
             Box(modifier = Modifier.fillMaxSize()) {
+                // LazyColumn displays the list of habits.
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -96,7 +106,7 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
                     }
                 }
 
-                // Floating Action Buttons for Stats and Habit Form
+                // Column with Floating Action Buttons (FABs) for stats and adding a new habit.
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.End,
@@ -104,6 +114,7 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
                         .align(Alignment.BottomEnd)
                         .padding(16.dp)
                 ) {
+                    // FAB to navigate to the Habit Stats screen.
                     FloatingActionButton(
                         onClick = {
                             Log.d(APP_TAG, "HabitListScreen: Navigating to Habit Stats Screen")
@@ -117,7 +128,7 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
                             contentDescription = "View Stats"
                         )
                     }
-
+                    // FAB to navigate to the Habit Form screen.
                     FloatingActionButton(
                         onClick = {
                             Log.d(APP_TAG, "HabitListScreen: Navigating to Habit Form Screen")
@@ -137,6 +148,19 @@ fun HabitListScreen(viewModel: HabitViewModel, navController: NavHostController)
     }
 }
 
+/**
+ * Displays a single habit item.
+ *
+ * Shows the habit name, progress text, a progress indicator, and buttons for:
+ * - Decreasing progress.
+ * - Increasing progress.
+ * - Deleting the habit.
+ *
+ * @param habit The habit to display.
+ * @param onIncrement Callback invoked when the increment button is clicked.
+ * @param onDecrement Callback invoked when the decrement button is clicked.
+ * @param onDelete Callback invoked when the delete button is clicked.
+ */
 @Composable
 fun HabitItem(
     habit: Habit,
@@ -183,6 +207,7 @@ fun HabitItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row {
+                    // Button to decrease progress.
                     IconButton(onClick = {
                         Log.d(APP_TAG, "HabitItem: Decrease button clicked for habit '${habit.name}'")
                         onDecrement()
@@ -193,6 +218,7 @@ fun HabitItem(
                             tint = Color.Black
                         )
                     }
+                    // Button to increase progress.
                     IconButton(onClick = {
                         Log.d(APP_TAG, "HabitItem: Increase button clicked for habit '${habit.name}'")
                         onIncrement()
@@ -204,6 +230,7 @@ fun HabitItem(
                         )
                     }
                 }
+                // Button to delete the habit.
                 IconButton(onClick = {
                     Log.d(APP_TAG, "HabitItem: Delete button clicked for habit '${habit.name}'")
                     onDelete()
@@ -218,6 +245,7 @@ fun HabitItem(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
