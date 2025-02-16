@@ -2,60 +2,58 @@ package project.pdm.chatr.data
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.Dispatchers
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import project.pdm.chatr.APP_TAG
 import project.pdm.chatr.model.Habit
-import java.io.File
+
+// Extensão para criar o DataStore
+private val Context.dataStore by preferencesDataStore(name = "habits_datastore")
 
 /**
- * Repository for managing the list of habits.
+ * Repository for managing the list of habits using DataStore.
  *
- * @param context The application context used to access the file system.
+ * @param context The application context used to access the DataStore.
  *
  * Note: The Habit model should include the weeklyCompletions field.
  *      This field will be automatically serialized and deserialized.
  */
 class HabitRepository(private val context: Context) {
 
-    private val filename = "habits.txt"
-    private val habitsFlow = MutableStateFlow<List<Habit>>(emptyList())
+    // Key to store/retrieve the habits JSON string.
+    private val HABITS_KEY = stringPreferencesKey("habits_key")
 
-    init {
-        // Load habits from file when the repository is initialized.
-        Log.d(APP_TAG, "HabitRepository init: loading habits from $filename")
-        loadHabits()
+    /**
+     * Returns a flow of habits.
+     */
+    fun getHabits(): Flow<List<Habit>> = context.dataStore.data.map { preferences ->
+        preferences[HABITS_KEY]?.let { jsonString ->
+            try {
+                Json.decodeFromString(jsonString)
+            } catch (e: Exception) {
+                Log.e(APP_TAG, "getHabits: Error decoding habits JSON", e)
+                emptyList()
+            }
+        } ?: run {
+            Log.d(APP_TAG, "getHabits: No habits found, returning empty list")
+            emptyList()
+        }
     }
 
-    // Returns a flow of habits.
-    fun getHabits(): Flow<List<Habit>> = habitsFlow
-
-    // Saves the list of habits to a file and updates the flow.
+    /**
+     * Saves the list of habits to the DataStore.
+     */
     suspend fun saveHabits(habits: List<Habit>) {
-        Log.d(APP_TAG, "saveHabits: Saving ${habits.size} habits to file $filename")
-        withContext(Dispatchers.IO) {
-            val file = File(context.filesDir, filename)
-            file.writeText(Json.encodeToString(habits))
+        Log.d(APP_TAG, "saveHabits: Saving ${habits.size} habits to DataStore")
+        context.dataStore.edit { preferences ->
+            preferences[HABITS_KEY] = Json.encodeToString(habits)
         }
-        habitsFlow.value = habits
         Log.d(APP_TAG, "saveHabits: Habits saved successfully")
-    }
-
-    // Loads habits from the file if it exists.
-    private fun loadHabits() {
-        Log.d(APP_TAG, "loadHabits: Checking if file $filename exists in ${context.filesDir}")
-        val file = File(context.filesDir, filename)
-        if (file.exists()) {
-            val content = file.readText()
-            habitsFlow.value = Json.decodeFromString(content)
-            Log.d(APP_TAG, "loadHabits: Loaded ${habitsFlow.value.size} habits from file.")
-        } else {
-            Log.d(APP_TAG, "loadHabits: File does not exist, starting with empty list.")
-        }
     }
 }
