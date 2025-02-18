@@ -1,59 +1,62 @@
 package project.pdm.chatr.data
 
-import android.content.Context
 import android.util.Log
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import kotlinx.coroutines.flow.callbackFlow
 import project.pdm.chatr.APP_TAG
 import project.pdm.chatr.model.Habit
 
-// Extensão para criar o DataStore
-private val Context.dataStore by preferencesDataStore(name = "habits_datastore")
-
 /**
- * Repository for managing the list of habits using DataStore.
- *
- * @param context The application context used to access the DataStore.
- *
- * Note: The Habit model should include the weeklyCompletions field.
- *      This field will be automatically serialized and deserialized.
+ * Repository for managing habits in Firestore
+ * @property db Firestore instance
+ * @property habitsCollection Firestore collection for habits
+ * @constructor Creates a HabitRepository
  */
-class HabitRepository(private val context: Context) {
+class HabitRepository {
 
-    // Key to store/retrieve the habits JSON string.
-    private val HABITS_KEY = stringPreferencesKey("habits_key")
+    private val db = FirebaseFirestore.getInstance()
+    private val habitsCollection = db.collection("habits")
 
-    /**
-     * Returns a flow of habits.
-     */
-    fun getHabits(): Flow<List<Habit>> = context.dataStore.data.map { preferences ->
-        preferences[HABITS_KEY]?.let { jsonString ->
-            try {
-                Json.decodeFromString(jsonString)
-            } catch (e: Exception) {
-                Log.e(APP_TAG, "getHabits: Error decoding habits JSON", e)
-                emptyList()
+    // Retrieves habits as a Flow
+    fun getHabits(): Flow<List<Habit>> = callbackFlow {
+        val subscription: ListenerRegistration = habitsCollection.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                Log.e(APP_TAG, "getHabits: Error retrieving data", error)
+                close(error)
+                return@addSnapshotListener
             }
-        } ?: run {
-            Log.d(APP_TAG, "getHabits: No habits found, returning empty list")
-            emptyList()
+            val habits = snapshot?.documents?.mapNotNull { doc ->
+                doc.toObject(Habit::class.java)
+            } ?: emptyList()
+            trySend(habits)
         }
+        awaitClose { subscription.remove() }
     }
 
-    /**
-     * Saves the list of habits to the DataStore.
-     */
-    suspend fun saveHabits(habits: List<Habit>) {
-        Log.d(APP_TAG, "saveHabits: Saving ${habits.size} habits to DataStore")
-        context.dataStore.edit { preferences ->
-            preferences[HABITS_KEY] = Json.encodeToString(habits)
-        }
-        Log.d(APP_TAG, "saveHabits: Habits saved successfully")
+    // Saves or updates a habit in Firestore
+    fun saveHabit(habit: Habit) {
+        habitsCollection.document(habit.id.toString())
+            .set(habit)
+            .addOnSuccessListener {
+                Log.d(APP_TAG, "saveHabit: Habit saved successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e(APP_TAG, "saveHabit: Error saving habit", e)
+            }
+    }
+
+    // Deletes a habit from Firestore
+    fun deleteHabit(habit: Habit) {
+        habitsCollection.document(habit.id.toString())
+            .delete()
+            .addOnSuccessListener {
+                Log.d(APP_TAG, "deleteHabit: Habit deleted successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e(APP_TAG, "deleteHabit: Error deleting habit", e)
+            }
     }
 }

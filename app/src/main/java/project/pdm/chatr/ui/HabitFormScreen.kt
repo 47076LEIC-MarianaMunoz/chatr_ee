@@ -45,6 +45,7 @@ fun HabitFormScreen(
     var description by remember { mutableStateOf("") }
     var targetPerDay by remember { mutableStateOf("1") }
 
+    // Habit form layout
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,6 +78,7 @@ fun HabitFormScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Habit form fields
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center

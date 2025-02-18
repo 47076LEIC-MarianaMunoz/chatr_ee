@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "606264859456",
+    "project_id": "chatr-20a77",
+    "storage_bucket": "chatr-20a77.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:606264859456:android:363243ca182863325b78a5",
+        "android_client_info": {
+          "package_name": "project.pdm.chatr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHk5zolCqQQkZIqbsF-Fcx-ApB5UXSF4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
