@@ -29,7 +29,7 @@ class HabitViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Atualiza a contagem diária de um hábito e, se necessário, registra a conclusão diária.
+     * Updates the daily count of a habit and, if necessary, records the daily completion.
      */
     fun updateHabitCompletion(habit: Habit, newCompleted: Int) {
         _habits.value = _habits.value.map {
@@ -52,12 +52,12 @@ class HabitViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Incrementa as conclusões semanais para o dia atual quando o hábito é completado.
+     * Increments the weekly completion count for the current day when the habit is completed.
      */
     private fun recordDailyCompletion(habit: Habit) {
         viewModelScope.launch {
             val calendar = Calendar.getInstance()
-            // Converte o dia da semana para índice 0 (segunda) a 6 (domingo)
+            // Converts the weekday to an index from 0 (Monday) to 6 (Sunday)
             val dayIndex = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
             val updatedWeek = habit.weeklyCompletions.toMutableList()
             updatedWeek[dayIndex] = updatedWeek[dayIndex] + 1
@@ -68,7 +68,7 @@ class HabitViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Rola os dados semanais para um novo dia e reseta a contagem diária.
+     * Rolls the weekly data to a new day and resets the daily count.
      */
     fun shiftWeeklyDataForNewDay() {
         _habits.value = _habits.value.map { habit ->
